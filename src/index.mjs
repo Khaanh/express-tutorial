@@ -1,5 +1,5 @@
 import express from "express";
-// Get Request #2
+// Route Parameters #3
 const app = express();
 
 const PORT = process.env.PORT || 3001;
@@ -13,17 +13,32 @@ const PORT = process.env.PORT || 3001;
 // 		msg: "Hello",
 // 	});
 // });
+const mockUsers = [
+	{ id: 1, userName: "Jack", displayName: "Daniel" },
+	{ id: 2, userName: "Alex", displayName: "Move" },
+	{ id: 3, userName: "Maroon", displayName: "John" },
+];
 
 app.get("/", (req, res) => {
 	res.status(201).send({ msg: "Hello" });
 });
 
 app.get("/api/users", (req, res) => {
-	res.send([
-		{ id: 1, userName: "Jack", displayName: "Daniel" },
-		{ id: 2, userName: "Alex", displayName: "Move" },
-		{ id: 3, userName: "Maroon", displayName: "John" },
-	]);
+	res.send(mockUsers);
+});
+
+app.get("/api/users/:id", (req, res) => {
+	console.log(req.params);
+	const parsedId = parseInt(req.params.id);
+	// console.log(parsedId);
+
+	if (isNaN(parsedId))
+		return res.status(400).send({ msg: "Bad Request. Invalid ID" });
+
+	const findUser = mockUsers.find((user) => user.id === parsedId);
+	if (!findUser) return res.sendStatus(404);
+
+	return res.send(findUser);
 });
 
 app.get("/api/products", (req, res) => {
