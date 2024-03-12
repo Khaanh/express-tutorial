@@ -1,5 +1,5 @@
 import express from "express";
-// Route Parameters #3
+// Query Parameters #4
 const app = express();
 
 const PORT = process.env.PORT || 3001;
@@ -17,6 +17,10 @@ const mockUsers = [
 	{ id: 1, userName: "Jack", displayName: "Daniel" },
 	{ id: 2, userName: "Alex", displayName: "Move" },
 	{ id: 3, userName: "Maroon", displayName: "John" },
+	{ id: 4, userName: "Jason", displayName: "Mor" },
+	{ id: 5, userName: "David", displayName: "Kim" },
+	{ id: 6, userName: "Johny", displayName: "Depp" },
+	{ id: 7, userName: "Brat", displayName: "Pitt" },
 ];
 
 app.get("/", (req, res) => {
@@ -24,7 +28,15 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/users", (req, res) => {
-	res.send(mockUsers);
+	console.log(res.query);
+	const {
+		query: { filter, value },
+	} = req;
+
+	if (!filter & !value) return res.send(mockUsers);
+
+	if (filter && value)
+		return res.send(mockUsers.filter((user) => user[filter].includes(value)));
 });
 
 app.get("/api/users/:id", (req, res) => {
