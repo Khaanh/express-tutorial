@@ -28,21 +28,20 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/users", (req, res) => {
-	console.log(res.query);
+	console.log(req.query);
 	const {
 		query: { filter, value },
 	} = req;
 
-	if (!filter & !value) return res.send(mockUsers);
-
 	if (filter && value)
 		return res.send(mockUsers.filter((user) => user[filter].includes(value)));
+
+	return res.send(mockUsers);
 });
 
 app.get("/api/users/:id", (req, res) => {
 	console.log(req.params);
 	const parsedId = parseInt(req.params.id);
-	// console.log(parsedId);
 
 	if (isNaN(parsedId))
 		return res.status(400).send({ msg: "Bad Request. Invalid ID" });
